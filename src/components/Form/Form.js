@@ -25,7 +25,7 @@ export const Form = () => {
     }
 
     const clear = () => {
-
+        //empty for now
     }
 
     return (
