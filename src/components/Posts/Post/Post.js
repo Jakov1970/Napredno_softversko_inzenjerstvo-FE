@@ -7,7 +7,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@material-ui/core';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { deletePost } from '../../../actions/posts';
+import { deletePost, likePost } from '../../../actions/posts';
 
 export const Post = ({ post, setCurrentId }) => {
     const classes = useStyles();
@@ -32,10 +32,10 @@ export const Post = ({ post, setCurrentId }) => {
             </div>
             <Typography className={classes.title} variant="h5" gutterButtom>{post.title}</Typography>
             <CardContent>
-                <Typography variant="h5" gutterButtom>{post.message}</Typography>
+                <Typography variant="body2" color="textSecondary" component="p" gutterButtom>{post.message}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
-                <Button size="small" color="primary" onClick={() => { }}>
+                <Button size="small" color="primary" onClick={() => dispatch(likePost(post._id))}>
                     <ThubUpAltIcon fontSize="small" />
                     Like
                     {post.likeCount}
