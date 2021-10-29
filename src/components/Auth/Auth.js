@@ -1,4 +1,4 @@
-import { Avatar, Button, Container, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Avatar, Button, Container, Grid, Paper, Typography } from '@material-ui/core';
 import React, { useState } from 'react'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { GoogleLogin } from 'react-google-login';
@@ -8,6 +8,9 @@ import useStyles from './styles';
 import Input from './Input';
 import Icon from './icon';
 import { useDispatch } from 'react-redux';
+import { signin, signup } from '../../actions/auth';
+
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPasword: ''};
 
 const Auth = () => {
     const classes = useStyles();
@@ -15,30 +18,37 @@ const Auth = () => {
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
+    const [formData, setFormData] = useState(initialState);
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(isSignedup) {
+            dispatch(signup(formData, history));
+        }
+        else {
+            dispatch(signin(formData, history));
+        }
     }
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value });
     }
 
     const switchMode = () => {
         setIsSignedup((prevIsSignedUp) => !prevIsSignedUp);
         handleShowPassword(false);
     }
- 
+
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
     const googleSuccess = async (res) => {
         const result = res?.profileObj;
         const token = res?.tokenId;
-        try{
-            dispatch({type: 'AUTH', data: {result, token }});
+        try {
+            dispatch({ type: 'AUTH', data: { result, token } });
             history.push('/');
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
         }
     }
@@ -60,10 +70,10 @@ const Auth = () => {
                     <Grid container spacing={2}>
                         {
                             isSignedup && (
-                                <div>
+                                <>
                                     <Input name="firstName" label="First Name" handleChange={handleChange} autofocus half />
-                                    <Input name="firstName" label="First Name" handleChange={handleChange} autofocus half />
-                                </div>
+                                    <Input name="lastName" label="Last Name" handleChange={handleChange} autofocus half />
+                                </>
                             )
                         }
                         <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
@@ -71,9 +81,9 @@ const Auth = () => {
                         {isSignedup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
                     </Grid>
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-                    {isSignedup ? 'Sign Up' : 'Sign In'}
+                        {isSignedup ? 'Sign Up' : 'Sign In'}
                     </Button>
-                    <GoogleLogin 
+                    <GoogleLogin
                         clientId="304135834634-qdq2qdcaoe151jk6ll5ujf61fufhoq3e.apps.googleusercontent.com"
                         render={(renderProps) => (
                             <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">
@@ -87,9 +97,9 @@ const Auth = () => {
                     <Grid type="container" jusitfy="flex-end">
                         <Grid item>
                             <Button onClick={switchMode}>
-                            {
-                                isSignedup ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"
-                            }
+                                {
+                                    isSignedup ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"
+                                }
                             </Button>
                         </Grid>
                     </Grid>
