@@ -10,7 +10,7 @@ import Icon from './icon';
 import { useDispatch } from 'react-redux';
 import { signin, signup } from '../../actions/auth';
 
-const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPasword: ''};
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: ''};
 
 const Auth = () => {
     const classes = useStyles();
@@ -23,6 +23,7 @@ const Auth = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if(isSignedup) {
+            console.log(formData);
             dispatch(signup(formData, history));
         }
         else {
@@ -36,7 +37,7 @@ const Auth = () => {
 
     const switchMode = () => {
         setIsSignedup((prevIsSignedUp) => !prevIsSignedUp);
-        handleShowPassword(false);
+        setShowPassword(false);
     }
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
